@@ -1,11 +1,14 @@
-from flask import Flask, request, jsonify, render_template
-import pickle
+from flask import Flask, request, jsonify, render_template,url_for
 import joblib
 import pandas as pd
-import csv
+import os
+from sklearn.metrics import classification_report
 
 app = Flask(__name__)
-model = pickle.load(open('titanic_classifier.pkl','rb'))
+
+
+UPLOAD_FOLDER  = '/Users/aria/Desktop'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/')
 def home():
@@ -13,26 +16,31 @@ def home():
 
 @app.route('/predict', methods=['GET', 'POST'])
 def predict():
+    # First save the uploaded csv file and pkl file.
     if request.method == 'POST':
-        # Create variable for uploaded file
-        f = request.files['fileupload']
-        print('yes')
-        # store the file contents as a string
-        fstring = f.read()
+        upload_file = request.files['file']
+        upload_model = request.files['model']
+        if upload_file.filename != '' and upload_model.filename != '':
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], upload_file.filename)
+            model_path = os.path.join(app.config['UPLOAD_FOLDER'], upload_model.filename)
+            upload_file.save(file_path)
+            upload_model.save(model_path)
 
-        # create list of dictionaries keyed by header row
-        csv_dicts = [{k: v for k, v in row.items()} for row in csv.DictReader(fstring.splitlines(), skipinitialspace=True)]
+        df = pd.read_csv(file_path)
+        print(file_path)
+        print('Here')
 
-        print(csv_dicts)
+        x = df[df.columns.difference(['Survived'])]
+        y_true = df['Survived']
 
-    json_ = request.json
-    query_df = pd.DataFrame(json_)
-    query = pd.get_dummies(query_df)
+        classifier = joblib.load(model_path)
+        prediction = classifier.predict(x[:])
 
-    classifier = joblib.load('titanic_classifier.pkl')
-    prediction = classifier.predict(query)
+        y_pred = list(prediction)
 
-    return render_template('page.html',prediction_display_area='Predict result：{}'.format(jsonify({'prediction': str(list(prediction))})))
+        return render_template('page.html',prediction_display_area='Result：{}'.format(classification_report(y_true, y_pred)))
+
+
 
 if __name__ == "__main__":
     app.run(port=3000,debug = True)

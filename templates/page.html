@@ -10,17 +10,11 @@
     <br>
 
     <form action="{{ url_for('predict')}}" method="post" enctype="multipart/form-data">
-    <input type="file" name="fileupload" id="fileToUpload">
-    <input type="submit" value="Upload File" name="submit">
+    <input type="file" name="file" id="fileToUpload">
+        <input type="file" name="model" id="modelToUpload">
+    <input type="submit" value="Submit" name="submit">
     </form>
 
-    <form action="{{ url_for('predict')}}" method="post">
-
-        <br>
-        <br>
-        <button type="submit">Predict</button>
-    </form>
-    <br>
     {{ prediction_display_area }}
 </div>
 
