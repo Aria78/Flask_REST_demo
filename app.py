@@ -38,7 +38,10 @@ def predict():
 
         y_pred = list(prediction)
 
-        return render_template('page.html',prediction_display_area='Result：{}'.format(classification_report(y_true, y_pred)))
+        result = pd.DataFrame(classification_report(y_true, y_pred,output_dict = True)).T
+
+        return render_template('table.html',  tables=[result.to_html(classes='data', header="true")])
+
 
 
 

@@ -2,16 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Demo</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div align="center">
+<div align="center" class="w3-panel w3-border">
+    <br>
     <h2>Demo Test for Endofotonics</h2>
     <br>
 
     <form action="{{ url_for('predict')}}" method="post" enctype="multipart/form-data">
+        <p class = "bold">Please choose your dataset(.csv):</p>
     <input type="file" name="file" id="fileToUpload">
+        <br>
+        <br>
+        <p class = "bold">Please choose your model(.pkl):</p>
         <input type="file" name="model" id="modelToUpload">
+        <p></p>
+        <br>
+        <br>
     <input type="submit" value="Submit" name="submit">
     </form>
 
