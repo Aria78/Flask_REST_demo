@@ -1,3 +1,3 @@
 # Flask_REST
 
-DEMO for EF
+A demo for usage of Flask_REST.
